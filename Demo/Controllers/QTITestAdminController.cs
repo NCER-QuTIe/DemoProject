@@ -25,7 +25,11 @@ public class QTITestAdminController(IServiceManager serviceManager) : Controller
 
     [HttpGet]
     [Route("qtitests")]
-    public async Task<IActionResult> GetQTITests() => Ok(await _service.GetQTITests());
+    public async Task<IActionResult> GetQTITests()
+    {
+        var x = await _service.GetQTITests();
+        return Ok(x);
+    }
 
     [HttpGet]
     [Route("qtitest/{name}")]
@@ -56,4 +60,16 @@ public class QTITestAdminController(IServiceManager serviceManager) : Controller
         await _service.DeleteQTITestByIdAsync(id);
         return NoContent();
     }
+
+    //[HttpDelete]
+    //[Route("qtitests")]
+    //public async Task<IActionResult> DeleteQTITest()
+    //{
+    //    var tests = await _service.GetQTITests();
+    //    foreach (var test in tests)
+    //    {
+    //        await _service.DeleteQTITestByIdAsync(test.Id);
+    //    }
+    //    return Ok();
+    //}
 }

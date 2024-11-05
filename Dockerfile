@@ -3,13 +3,16 @@ WORKDIR /App
 
 # Copy everything
 COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -c Release -o out
 
-# Build runtime image
+# Restore as distinct layers
+RUN dotnet restore Demo/Demo.csproj
+
+# Build and publish a release
+RUN dotnet publish Demo/Demo.csproj -c Release -o /App/out
+
+# Use the .NET runtime image for production
 FROM mcr.microsoft.com/dotnet/aspnet:8.0@sha256:6c4df091e4e531bb93bdbfe7e7f0998e7ced344f54426b7e874116a3dc3233ff
 WORKDIR /App
-COPY --from=build-env /App/out .
+COPY --from=build-env /App/out ./
+ENV ASPNETCORE_URLS=http://+:80
 ENTRYPOINT ["dotnet", "Demo.dll"]

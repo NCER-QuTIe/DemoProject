@@ -1,6 +1,7 @@
 using Contracts.Repositories;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.Models.Configurations;
 using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
 using Redis.OM;
 using Redis.OM.Contracts;
@@ -12,13 +13,20 @@ namespace DemoProjectTests;
 
 public class QTITestRepositoryTest
 {
-    private ConfigurationOptions Options => new ConfigurationOptions { EndPoints = { "DemoRedis_Prod:6379" } };
-    private IRedisConnectionProvider Provider => new RedisConnectionProvider(Options);
+    private ConfigurationOptions Options => new RedisOptionsFactory().Options;
+    private IRedisConnectionProvider _provider => new RedisConnectionProvider(Options);
     private IRepositoryManager _repositoryManager;
 
     public QTITestRepositoryTest()
     {
-        _repositoryManager = new RepositoryManager(Provider);
+        _repositoryManager = new RepositoryManager(_provider);
+
+        if (_provider.Connection.GetIndexInfo(typeof(QTITest)) == null)
+        {
+            _provider.Connection.DropIndex(typeof(QTITest));
+            _provider.Connection.CreateIndex(typeof(QTITest));
+            _provider.RedisCollection<QTITest>().InsertAsync(QTITestConfiguration.InitialData()).Wait();
+        }
     }
 
     [Fact]

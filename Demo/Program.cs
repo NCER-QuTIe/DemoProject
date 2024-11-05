@@ -9,9 +9,10 @@ LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentD
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Services;
 builder.Services.ConfigureCors();
 builder.Services.ConfigureLoggerService();
-builder.Services.ConfigureIRedisProviderService();//////////////////
+builder.Services.ConfigureIRedisProviderService(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureMapper();

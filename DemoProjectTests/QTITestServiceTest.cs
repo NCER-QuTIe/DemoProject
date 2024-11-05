@@ -12,6 +12,7 @@ using StackExchange.Redis;
 using DataTransferObjects.Creation;
 using DataTransferObjects.Transfer;
 using Entities.Exceptions;
+using Entities.Models.Configurations;
 
 namespace DemoProjectTests;
 
@@ -23,7 +24,7 @@ public class QTITestServiceTest
     private ILoggerManager _loggerManager;
     private IMapper _mapper;
 
-    private ConfigurationOptions Options => new ConfigurationOptions { EndPoints = { "DemoRedis_Prod:6379" } };
+    private ConfigurationOptions Options => new RedisOptionsFactory().Options;
 
     public QTITestServiceTest()
     {
@@ -32,6 +33,13 @@ public class QTITestServiceTest
         _loggerManager = new LoggerManager();
         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
         _serviceManager = new ServiceManager(_reppositoryManager, _loggerManager, _mapper);
+
+        if (_provider.Connection.GetIndexInfo(typeof(QTITest)) == null)
+        {
+            _provider.Connection.DropIndex(typeof(QTITest));
+            _provider.Connection.CreateIndex(typeof(QTITest));
+            _provider.RedisCollection<QTITest>().InsertAsync(QTITestConfiguration.InitialData()).Wait();
+        }
     }
 
     [Fact]
@@ -107,7 +115,7 @@ public class QTITestServiceTest
     private QTITest InsertRandomTest()
     {
         QTITest test = GenerateTest();
-        InsertTest(test);
+        InsertTest(test).Wait();
         return test;
     }
 
@@ -117,7 +125,7 @@ public class QTITestServiceTest
         return new QTITest { Name = $"Test_QTITestServiceTest_Test_{rand.NextInt64()}", Description = "desc", PackageBase64 = "asdasd", Status = Entities.Enums.TestStatusEnum.Active };
     }
 
-    private async void InsertTest(QTITest test)
+    private async Task InsertTest(QTITest test)
     {
         await _reppositoryManager.QTITest.CreateQTITestAsync(test);
     }

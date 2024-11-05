@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  DemoProject_API_Staging:
+    image: demo_project_api  # Specify the custom image name and tag
+    build:
+      context: .
+      dockerfile: Dockerfile  # Specify the path to your Dockerfile
+    ports:
+      - "5153:80"  # Map port 80 in the container to port 5000 on the host
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+    networks:
+      - DemoProject_Network_Staging
+    depends_on:
+      - DemoProject_Redis_Staging
+
+  DemoProject_Redis_Staging:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6381:6379"  # Redis default port
+    networks:
+      - DemoProject_Network_Staging
+
+networks:
+  DemoProject_Network_Staging:
+    driver: bridge

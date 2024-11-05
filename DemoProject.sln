@@ -19,9 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MockRepository", "MockRepos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{F355D4FF-0539-4426-AD27-C50746340D5C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InitRedis", "InitRedis\InitRedis.csproj", "{710F7276-C298-40F1-AF0E-F17AC6C26AAB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoProjectTests", "DemoProjectTests\DemoProjectTests.csproj", "{A01B9B31-8D43-4CB5-AB41-ACD4EF3717BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoProjectTests", "DemoProjectTests\DemoProjectTests.csproj", "{A01B9B31-8D43-4CB5-AB41-ACD4EF3717BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +59,6 @@ Global
 		{F355D4FF-0539-4426-AD27-C50746340D5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F355D4FF-0539-4426-AD27-C50746340D5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F355D4FF-0539-4426-AD27-C50746340D5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{710F7276-C298-40F1-AF0E-F17AC6C26AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{710F7276-C298-40F1-AF0E-F17AC6C26AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{710F7276-C298-40F1-AF0E-F17AC6C26AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{710F7276-C298-40F1-AF0E-F17AC6C26AAB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A01B9B31-8D43-4CB5-AB41-ACD4EF3717BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A01B9B31-8D43-4CB5-AB41-ACD4EF3717BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A01B9B31-8D43-4CB5-AB41-ACD4EF3717BA}.Release|Any CPU.ActiveCfg = Release|Any CPU

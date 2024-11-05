@@ -6,6 +6,7 @@ using DataTransferObjects.Transfer;
 using Entities.Enums;
 using Entities.Exceptions;
 using Entities.Models;
+using Entities.Models.Configurations;
 using LoggerService;
 using Microsoft.Extensions.DependencyInjection;
 using Redis.OM;
@@ -24,7 +25,7 @@ public class QTITestAdminServiceTest
     private ILoggerManager _loggerManager;
     private IMapper _mapper;
 
-    private ConfigurationOptions Options => new ConfigurationOptions { EndPoints = { "DemoRedis_Prod:6379" } };
+    private ConfigurationOptions Options => new RedisOptionsFactory().Options;
 
     public QTITestAdminServiceTest()
     {
@@ -33,8 +34,14 @@ public class QTITestAdminServiceTest
         _loggerManager = new LoggerManager();
         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
         _serviceManager = new ServiceManager(_reppositoryManager, _loggerManager, _mapper);
-    }
 
+        if(_provider.Connection.GetIndexInfo(typeof(QTITest)) == null)
+        {
+            _provider.Connection.DropIndex(typeof(QTITest));
+            _provider.Connection.CreateIndex(typeof(QTITest));
+            _provider.RedisCollection<QTITest>().InsertAsync(QTITestConfiguration.InitialData()).Wait();
+        }
+    }
 
     [Fact]
     public void Exists()

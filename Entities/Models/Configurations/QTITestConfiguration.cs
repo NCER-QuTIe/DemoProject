@@ -1,9 +1,9 @@
 ﻿using Entities.Enums;
 using Entities.Models;
 
-namespace InitRedis;
+namespace Entities.Models.Configurations;
 
-internal class QTITestConfiguration
+public static class QTITestConfiguration
 {
     public static List<QTITest> InitialData()
     {

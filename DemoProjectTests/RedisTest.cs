@@ -11,24 +11,24 @@ namespace DemoProjectTests;
 
 public class RedisTest
 {
-    private ConfigurationOptions _options => new ConfigurationOptions { EndPoints = { "DemoRedis_Prod:6379" } };
+    private ConfigurationOptions _options => new RedisOptionsFactory().Options;
 
     [Fact]
-    public void Connect_with_endpoint()
+    public async void Connect_with_endpoint()
     {
         IDatabase db = ConnectionMultiplexer.Connect(_options).GetDatabase();
         
-        double timeToPing = db.Ping().TotalMilliseconds;
+        double timeToPing = (await db.PingAsync()).TotalMilliseconds;
 
         Assert.True(timeToPing < 100);
     }
 
     [Fact]
-    public void Contain_qtiTest_index()
+    public async void Contain_qtiTest_index()
     {
         var provider = new RedisConnectionProvider(_options);
         
-        RedisIndexInfo? info = provider.Connection.GetIndexInfo(typeof(QTITest));
+        RedisIndexInfo? info = await provider.Connection.GetIndexInfoAsync(typeof(QTITest));
 
         Assert.NotNull(info);
     }
