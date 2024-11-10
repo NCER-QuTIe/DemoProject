@@ -39,6 +39,13 @@ public class QTITestService(IRepositoryManager repositoryManager, ILoggerManager
 
     public async Task<IEnumerable<QTITestDTO>> GetQTITests()
     {
-        return _mapper.Map<IEnumerable<QTITest>, IEnumerable<QTITestDTO>>(await _repo.GetQTITestsByConditionAsync(t => t.Status == TestStatusEnum.Active));
+        var tests = _mapper.Map<IEnumerable<QTITest>, IEnumerable<QTITestDTO>>(await _repo.GetQTITestsByConditionAsync(t => t.Status == TestStatusEnum.Active));
+
+        List<QTITestDTO> testsToReturn = new();
+        foreach(var test in tests)
+        {
+            testsToReturn.Add(test with { PackageBase64 = "EMPTY"});
+        }
+        return testsToReturn;
     }
 }

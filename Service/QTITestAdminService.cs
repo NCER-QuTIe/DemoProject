@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataTransferObjects.Transfer;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Service;
 
@@ -48,7 +49,14 @@ public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerMa
 
     public async Task<IEnumerable<QTITestDTO>> GetQTITests()
     {
-        return _mapper.Map<IEnumerable<QTITest>, IEnumerable<QTITestDTO>>(await _repo.GetAllQTITestsAsync());
+        var tests = _mapper.Map<IEnumerable<QTITest>, IEnumerable<QTITestDTO>>(await _repo.GetAllQTITestsAsync());
+
+        List<QTITestDTO> testsToReturn = new();
+        foreach (var test in tests)
+        {
+            testsToReturn.Add(test with { PackageBase64 = "EMPTY" });
+        }
+        return testsToReturn;
     }
 
     public async Task PatchQTITestStatus(Guid id, TestStatusEnum status)
