@@ -12,7 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataTransferObjects.Transfer;
-using static System.Net.Mime.MediaTypeNames;
+using System.Text.Json;
+using System.Reflection;
 
 namespace Service;
 
@@ -59,27 +60,31 @@ public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerMa
         return testsToReturn;
     }
 
-    public async Task PatchQTITestStatus(Guid id, TestStatusEnum status)
-    {
-        QTITest? test = await _repo.GetQTITestByIdAsync(id);
-        if (test == null) throw new QTITestByIdNotFoundException(id);
-
-        try
-        {
-            test.Status = status;
-            await _repo.UpdateQTITestAsync(test);
-        }
-        catch(Exception e)
-        {
-            throw new QTITestStatusPatchException(id, status, e);
-        }
-    }
-
     public async Task DeleteQTITestByIdAsync(Guid id)
     {
         QTITest? qtiTest = await _repo.GetQTITestByIdAsync(id);
         if (qtiTest == null) throw new QTITestDeleteByIdNotFoundException(id);
         
         await _repo.DeleteQTITestAsync(qtiTest);
+    }
+
+    public async Task UpdateQTITestAsync(Guid id, JsonElement patchObject)
+    {
+        QTITest? existingTest = await _repo.GetQTITestByIdAsync(id);
+        if (existingTest == null) throw new QTITestByIdNotFoundException(id);
+
+        var properties = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(patchObject.ToString());
+
+        foreach (var property in properties!)
+        {
+            var propInfo = typeof(QTITest).GetProperty(property.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (propInfo != null && propInfo.CanWrite)
+            {
+                object? value = JsonSerializer.Deserialize(property.Value.GetRawText(), propInfo.PropertyType);
+                propInfo.SetValue(existingTest, value);
+            }
+        }
+
+        await _repo.UpdateQTITestAsync(existingTest);
     }
 }

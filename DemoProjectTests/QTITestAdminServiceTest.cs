@@ -97,32 +97,32 @@ public class QTITestAdminServiceTest
         await Assert.ThrowsAsync<QTITestByNameNotFoundException>(async () => await service.GetQTITestByName(test.Name!));
     }
 
-    [Fact]
-    public async void Patch_qtiTest_status()
-    {
-        IQTITestAdminService service = _serviceManager.QTITestAdmin;
-        QTITest test = GenerateTest();
-        test.Status = TestStatusEnum.InActive;
-        InsertTest(test);
+    //[Fact]
+    //public async void Patch_qtiTest_status()
+    //{
+    //    IQTITestAdminService service = _serviceManager.QTITestAdmin;
+    //    QTITest test = GenerateTest();
+    //    test.Status = TestStatusEnum.InActive;
+    //    InsertTest(test);
 
-        await service.PatchQTITestStatus(test.Id, TestStatusEnum.Active);
-        QTITestDTO testDTO = await service.GetQTITestById(test.Id);
+    //    await service.PatchQTITestStatus(test.Id, TestStatusEnum.Active);
+    //    QTITestDTO testDTO = await service.GetQTITestById(test.Id);
 
-        Assert.Equal(TestStatusEnum.Active, testDTO.Status);
+    //    Assert.Equal(TestStatusEnum.Active, testDTO.Status);
 
-        DisposeTest(test);
-    }
+    //    DisposeTest(test);
+    //}
 
-    [Fact]
-    public async void Patch_invalid_qtiTest_status()
-    {
-        IQTITestAdminService service = _serviceManager.QTITestAdmin;
-        QTITest test = GenerateTest();
+    //[Fact]
+    //public async void Patch_invalid_qtiTest_status()
+    //{
+    //    IQTITestAdminService service = _serviceManager.QTITestAdmin;
+    //    QTITest test = GenerateTest();
          
-        await Assert.ThrowsAsync<QTITestByIdNotFoundException>(async () => await service.PatchQTITestStatus(test.Id, TestStatusEnum.Active));
+    //    await Assert.ThrowsAsync<QTITestByIdNotFoundException>(async () => await service.PatchQTITestStatus(test.Id, TestStatusEnum.Active));
 
-        DisposeTest(test);
-    }
+    //    DisposeTest(test);
+    //}
 
     [Fact] 
     public async void Delete_qtiTest()
