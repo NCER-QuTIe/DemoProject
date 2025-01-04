@@ -9,11 +9,13 @@ using System.Runtime.CompilerServices;
 using Entities.Models;
 using Entities.Enums;
 using Demo.ActionFilters;
+using System.Text.Json;
 
 namespace Demo.Controllers;
 
 [Controller]
 [Route("api/admin")]
+[ServiceFilter(typeof(ValidationFilterAttribute))]
 public class QTITestAdminController(IServiceManager serviceManager) : ControllerBase
 {
     private readonly IServiceManager _serviceManager = serviceManager;
@@ -37,20 +39,10 @@ public class QTITestAdminController(IServiceManager serviceManager) : Controller
 
     [HttpPost]
     [Route("qtitest")]
-    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateQTITest([FromBody] QTITestCreationDTO qtiTest)
     {
         var createdEntity = await _service.CreateQTITest(qtiTest);
         return CreatedAtAction("GetQTITest", new { id = createdEntity.Id }, createdEntity);
-    }
-
-    //TODO Generalize for PATCH
-    [HttpPatch]
-    [Route("qtitest/status")]
-    public async Task<IActionResult> UpdateQTITestStatus(Guid id, TestStatusEnum status)
-    {
-        await _service.PatchQTITestStatus(id, status);
-        return Ok(_service.GetQTITestById(id));
     }
 
     [HttpDelete]
@@ -59,6 +51,14 @@ public class QTITestAdminController(IServiceManager serviceManager) : Controller
     {
         await _service.DeleteQTITestByIdAsync(id);
         return NoContent();
+    }
+
+    [HttpPatch]
+    [Route("qtitest/{id:guid}")]
+    public async Task<IActionResult> UpdateQTITest(Guid id, [FromBody] JsonElement patchObject)
+    {
+        await _service.UpdateQTITestAsync(id, patchObject);
+        return Ok(_service.GetQTITestById(id));
     }
 
     //[HttpDelete]
