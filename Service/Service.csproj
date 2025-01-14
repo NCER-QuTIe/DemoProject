@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.410.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LoggerService\LoggerService.csproj" />
   </ItemGroup>
 

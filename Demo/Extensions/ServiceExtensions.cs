@@ -26,6 +26,11 @@ public static class ServiceExtensions
         });
     }
 
+    public static void ConfigureExternalAPIs(this IServiceCollection services)
+    {
+        services.AddScoped<ICreateQTIProcessorService, CreateQTIProcessorService>();
+    }
+
     public static void ConfigureIRedisProviderService(this IServiceCollection services, IConfiguration configuration)
     {
         var redisConnectionString = configuration.GetConnectionString("Redis");

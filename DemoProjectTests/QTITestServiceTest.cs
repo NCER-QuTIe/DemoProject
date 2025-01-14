@@ -19,20 +19,21 @@ namespace DemoProjectTests;
 public class QTITestServiceTest
 {
     private IServiceManager _serviceManager;
-    private IRepositoryManager _reppositoryManager;
+    private IRepositoryManager _repositoryManager;
     private IRedisConnectionProvider _provider;
     private ILoggerManager _loggerManager;
     private IMapper _mapper;
+    private ICreateQTIProcessorService _converterService = new ConverterAPIServiceFactory().ConverterAPIService;
 
     private ConfigurationOptions Options => new RedisOptionsFactory().Options;
 
     public QTITestServiceTest()
     {
         _provider = new RedisConnectionProvider(Options);
-        _reppositoryManager = new RepositoryManager(_provider);
+        _repositoryManager = new RepositoryManager(_provider);
         _loggerManager = new LoggerManager();
         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-        _serviceManager = new ServiceManager(_reppositoryManager, _loggerManager, _mapper);
+        _serviceManager = new ServiceManager(_repositoryManager, _loggerManager, _mapper, _converterService);
 
         if (_provider.Connection.GetIndexInfo(typeof(QTITest)) == null)
         {
@@ -127,11 +128,11 @@ public class QTITestServiceTest
 
     private async Task InsertTest(QTITest test)
     {
-        await _reppositoryManager.QTITest.CreateQTITestAsync(test);
+        await _repositoryManager.QTITest.CreateQTITestAsync(test);
     }
 
     private async void DisposeTest(QTITest test)
     {
-        await _reppositoryManager.QTITest.DeleteQTITestAsync(test);
+        await _repositoryManager.QTITest.DeleteQTITestAsync(test);
     }
 }
