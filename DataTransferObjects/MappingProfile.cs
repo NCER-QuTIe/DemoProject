@@ -9,6 +9,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<QTITestCreationDTO, QTITest>().ForMember("Uploaded", opt => opt.MapFrom(x => DateTime.Now));
+        CreateMap<QTITest, QTITestCreationDTO>();
         CreateMap<QTITest, QTITestDTO>();
     }
 }

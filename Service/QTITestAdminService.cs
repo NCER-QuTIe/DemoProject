@@ -17,17 +17,20 @@ using System.Reflection;
 
 namespace Service;
 
-public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper) : IQTITestAdminService
+public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper, ICreateQTIProcessorService qtiPreProcessor) : IQTITestAdminService
 {
     private readonly IQTITestRepository _repo = repositoryManager.QTITest;
     private readonly ILoggerManager _logger = loggerManager;
     private readonly IMapper _mapper = mapper;
+    private readonly ICreateQTIProcessorService _qtiPreProcessor = qtiPreProcessor;
 
     public async Task<QTITest> CreateQTITest(QTITestCreationDTO qtiTest)
     {
         if (qtiTest == null) throw new QTITestForCreationBadRequestException();
 
-        return await _repo.CreateQTITestAsync(_mapper.Map<QTITestCreationDTO, QTITest>(qtiTest));
+        QTITest test = await _qtiPreProcessor.PreProcessAsync(qtiTest);
+
+        return await _repo.CreateQTITestAsync(test);
     }
 
     public async Task<QTITestDTO> GetQTITestById(Guid id)

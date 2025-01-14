@@ -2,6 +2,7 @@
 using Contracts.Logger;
 using Contracts.Repositories;
 using Contracts.Services;
+using DataTransferObjects.Creation;
 using DataTransferObjects.Transfer;
 using Entities.Enums;
 using Entities.Exceptions;
@@ -24,6 +25,7 @@ public class QTITestAdminServiceTest
     private IRedisConnectionProvider _provider;
     private ILoggerManager _loggerManager;
     private IMapper _mapper;
+    private readonly ICreateQTIProcessorService _converterService = new ConverterAPIServiceFactory().ConverterAPIService;
 
     private ConfigurationOptions Options => new RedisOptionsFactory().Options;
 
@@ -33,7 +35,7 @@ public class QTITestAdminServiceTest
         _reppositoryManager = new RepositoryManager(_provider);
         _loggerManager = new LoggerManager();
         _mapper = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>()).CreateMapper();
-        _serviceManager = new ServiceManager(_reppositoryManager, _loggerManager, _mapper);
+        _serviceManager = new ServiceManager(_reppositoryManager, _loggerManager, _mapper, _converterService);
 
         if(_provider.Connection.GetIndexInfo(typeof(QTITest)) == null)
         {
@@ -143,6 +145,17 @@ public class QTITestAdminServiceTest
         QTITest test = GenerateTest();
 
         await Assert.ThrowsAsync<QTITestDeleteByIdNotFoundException>(async () => await service.DeleteQTITestByIdAsync(test.Id));
+    }
+
+    [Fact]
+    public async void Create_qtiTest_with_bad_package()
+    {
+        IQTITestAdminService service = _serviceManager.QTITestAdmin;
+        QTITest test = GenerateTest();
+        test.PackageBase64 = "bad_package";
+        QTITestCreationDTO testDTO = _mapper.Map<QTITest, QTITestCreationDTO>(test);
+
+        await Assert.ThrowsAsync<ConverterAPIServiceBadRequestException>(async () => await service.CreateQTITest(testDTO));
     }
 
 
