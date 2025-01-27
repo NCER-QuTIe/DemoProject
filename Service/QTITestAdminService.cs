@@ -60,6 +60,7 @@ public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerMa
         {
             testsToReturn.Add(test with { PackageBase64 = "EMPTY" });
         }
+        testsToReturn.Sort((a, b) => a.Uploaded < b.Uploaded ? 1 : -1);
         return testsToReturn;
     }
 
