@@ -8,6 +8,7 @@ using LoggerService;
 using System.Runtime.CompilerServices;
 using Entities.Models;
 using Entities.Enums;
+using Demo.BasicAuthentication;
 using Demo.ActionFilters;
 using System.Text.Json;
 
@@ -16,6 +17,7 @@ namespace Demo.Controllers;
 [Controller]
 [Route("api/admin")]
 [ServiceFilter(typeof(ValidationFilterAttribute))]
+[IdentityBasicAuthentication]
 public class QTITestAdminController(IServiceManager serviceManager) : ControllerBase
 {
     private readonly IServiceManager _serviceManager = serviceManager;
