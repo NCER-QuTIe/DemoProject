@@ -15,7 +15,6 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureIRedisProviderService(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
-builder.Services.ConfigureExternalAPIs();
 builder.Services.ConfigureMapper();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 
