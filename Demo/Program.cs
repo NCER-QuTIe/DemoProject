@@ -1,7 +1,9 @@
 using CompanyEmployees.Extensions;
 using Contracts.Logger;
 using Demo.ActionFilters;
+using Demo.Authentication;
 using Demo.Extensions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
@@ -22,6 +24,9 @@ builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
 builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
