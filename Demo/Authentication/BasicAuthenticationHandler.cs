@@ -86,7 +86,6 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
 
     private bool ValidateAdminCredentials(string userName, string password)
     {
-        var variables = Environment.GetEnvironmentVariables();
         string? envUserName = Environment.GetEnvironmentVariable("ADMIN_USERNAME");
         string? envPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
 
