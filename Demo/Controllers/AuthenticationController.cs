@@ -6,7 +6,7 @@ namespace Demo.Controllers;
 public class AuthenticationController : ControllerBase
 {
     [HttpGet]
-    [Route("api/login")]
+    [Route("api/admin/login")]
     [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     public OkResult Login() => Ok();
 }
