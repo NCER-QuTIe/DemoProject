@@ -10,12 +10,14 @@ using Entities.Models;
 using Entities.Enums;
 using Demo.ActionFilters;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Demo.Controllers;
 
 [Controller]
 [Route("api/admin")]
 [ServiceFilter(typeof(ValidationFilterAttribute))]
+[Authorize(AuthenticationSchemes = "BasicAuthentication")]
 public class QTITestAdminController(IServiceManager serviceManager) : ControllerBase
 {
     private readonly IServiceManager _serviceManager = serviceManager;

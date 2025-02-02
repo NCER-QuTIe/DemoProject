@@ -11,5 +11,8 @@ public class MappingProfile : Profile
         CreateMap<QTITestCreationDTO, QTITest>().ForMember("Uploaded", opt => opt.MapFrom(x => DateTime.Now));
         CreateMap<QTITest, QTITestCreationDTO>();
         CreateMap<QTITest, QTITestDTO>();
+
+        CreateMap<FeedbackCreationDTO, Feedback>().ForMember("Uploaded", opt => opt.MapFrom(x => DateTime.Now));
+        CreateMap<Feedback, FeedbackDTO>();
     }
 }
