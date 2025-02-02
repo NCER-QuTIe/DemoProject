@@ -13,11 +13,13 @@ namespace Service;
 
 public class ServiceManager(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper, ICreateQTIProcessorService converterService) : IServiceManager
 {
-    public Lazy<IQTITestService> _qtiTest => new Lazy<IQTITestService>(() => new QTITestService(repositoryManager, loggerManager, mapper));
-    public Lazy<IQTITestAdminService> _qtiTestAdmin => new Lazy<IQTITestAdminService>(() => new QTITestAdminService(repositoryManager, loggerManager, mapper, converterService));
+    private Lazy<IFeedbackService> _feedbackSerice => new Lazy<IFeedbackService>(() => new FeedbackService(repositoryManager, mapper, loggerManager));
+    private Lazy<IQTITestService> _qtiTest => new Lazy<IQTITestService>(() => new QTITestService(repositoryManager, loggerManager, mapper));
+    private Lazy<IQTITestAdminService> _qtiTestAdmin => new Lazy<IQTITestAdminService>(() => new QTITestAdminService(repositoryManager, loggerManager, mapper, converterService));
 
     public Task SaveAsync() => Task.CompletedTask;
 
     public IQTITestService QTITest => _qtiTest.Value;
     public IQTITestAdminService QTITestAdmin => _qtiTestAdmin.Value;
+    public IFeedbackService Feedback => _feedbackSerice.Value;
 }

@@ -10,5 +10,6 @@ public interface IServiceManager
 {
     IQTITestService QTITest { get; }
     IQTITestAdminService QTITestAdmin { get; }
+    IFeedbackService Feedback { get; }
     Task SaveAsync();
 }
