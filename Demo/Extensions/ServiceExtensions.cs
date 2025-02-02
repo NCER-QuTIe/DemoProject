@@ -72,6 +72,16 @@ public static class ServiceExtensions
             await provider.RedisCollection<QTITest>().InsertAsync(QTITestConfiguration.InitialData());
         }
     }
+    
+    private static async void ConfigureFeedback(IRedisConnectionProvider provider)
+    {
+        if (provider.Connection.GetIndexInfo(typeof(Feedback)) == null)
+        {
+            provider.Connection.DropIndex(typeof(Feedback));
+            provider.Connection.CreateIndex(typeof(Feedback));
+            await provider.RedisCollection<Feedback>().InsertAsync(FeedbackConfiguration.InitialData());
+        }
+    }
 
     private static void ConfigureRedisIndices(IConfiguration configuration)
     {
@@ -79,9 +89,9 @@ public static class ServiceExtensions
         {
             EndPoints = { configuration.GetConnectionString("Redis")! }
         };
-        Console.WriteLine(configuration.GetConnectionString("Redis"));
         var provider = new RedisConnectionProvider(opts);
 
         ConfigureQTITest(provider);
+        ConfigureFeedback(provider);
     }
 }
