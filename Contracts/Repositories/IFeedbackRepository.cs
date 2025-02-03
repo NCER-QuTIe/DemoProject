@@ -12,5 +12,5 @@ public interface IFeedbackRepository
     public Task<List<Feedback>> GetAllFeedbacksAsync();
     public Task<Feedback> GetFeedbackByIdAsync(Guid id);
     public Task<Feedback> CreateFeedbackAsync(Feedback feedback);
-    public Task DeleteQTITestAsync(Feedback qtiTest);
+    public Task DeleteFeedbackAsync(Feedback feedback);
 }
