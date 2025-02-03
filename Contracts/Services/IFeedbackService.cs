@@ -9,4 +9,5 @@ public interface IFeedbackService
     public Task<FeedbackDTO> GetFeedbackByIdAsync(Guid id);
     public Task<IEnumerable<FeedbackDTO>> GetFeedbacksAsync();
     public Task<Feedback> CreateFeedbackAsync(FeedbackCreationDTO feedback);
+    public Task DeleteFeedbackByIdAsync(Guid id);
 }

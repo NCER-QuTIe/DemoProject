@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Amazon.Runtime.Internal.Auth;
+using AutoMapper;
 using Contracts.Logger;
 using Contracts.Repositories;
 using Contracts.Services;
@@ -20,6 +21,14 @@ public class FeedbackService(IRepositoryManager repositoryManager, IMapper mappe
         Feedback feedback = mapper.Map<FeedbackCreationDTO, Feedback>(feedbackCreation);
 
         return await _repo.CreateFeedbackAsync(feedback);
+    }
+
+    public async Task DeleteFeedbackByIdAsync(Guid id)
+    {
+        Feedback? feedback = await _repo.GetFeedbackByIdAsync(id);
+        if (feedback == null) throw new FeedbackDeleteByIdNotFoundException(id);
+
+        await _repo.DeleteFeedbackAsync(feedback);
     }
 
     public async Task<FeedbackDTO> GetFeedbackByIdAsync(Guid id)

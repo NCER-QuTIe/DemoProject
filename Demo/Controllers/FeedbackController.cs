@@ -29,4 +29,11 @@ public class FeedbackController(IServiceManager serviceManager) : ControllerBase
         var createdEntity = await serviceManager.Feedback.CreateFeedbackAsync(feedback);
         return CreatedAtRoute("GetFeedbackById", new { id = createdEntity.Id }, createdEntity);
     }
+
+    [HttpDelete("feedback/{id:guid}")]
+    public async Task<IActionResult> DeleteFeedbackAsync(Guid id)
+    {
+        await serviceManager.Feedback.DeleteFeedbackByIdAsync(id);
+        return NoContent();
+    }
 }

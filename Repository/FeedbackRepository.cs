@@ -12,7 +12,7 @@ public class FeedbackRepository(IRedisConnectionProvider provider) : RepositoryB
         return feedback;
     }
 
-    public async Task DeleteQTITestAsync(Feedback feedback)
+    public async Task DeleteFeedbackAsync(Feedback feedback)
     {
         await DeleteAsync(feedback);
     }
