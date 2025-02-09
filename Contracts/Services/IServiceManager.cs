@@ -10,6 +10,8 @@ public interface IServiceManager
 {
     IQTITestService QTITest { get; }
     IQTITestAdminService QTITestAdmin { get; }
+    IExternalTestService ExternalTest { get; }
+    IExternalTestAdminService ExternalTestAdmin { get; }
     IFeedbackService Feedback { get; }
     Task SaveAsync();
 }

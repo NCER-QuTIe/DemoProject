@@ -3,17 +3,11 @@ using Contracts.Logger;
 using Contracts.Repositories;
 using Contracts.Services;
 using DataTransferObjects.Creation;
-using Entities.Models;
-using System;
-using Entities.Enums;
-using System.Collections.Generic;
-using Entities.Exceptions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataTransferObjects.Transfer;
-using System.Text.Json;
+using Entities.Models;
+using Entities.Exceptions.QTITest;
 using System.Reflection;
+using System.Text.Json;
 
 namespace Service;
 
@@ -68,7 +62,7 @@ public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerMa
     {
         QTITest? qtiTest = await _repo.GetQTITestByIdAsync(id);
         if (qtiTest == null) throw new QTITestDeleteByIdNotFoundException(id);
-        
+
         await _repo.DeleteQTITestAsync(qtiTest);
     }
 

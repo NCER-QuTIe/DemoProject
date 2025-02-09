@@ -72,7 +72,17 @@ public static class ServiceExtensions
             await provider.RedisCollection<QTITest>().InsertAsync(QTITestConfiguration.InitialData());
         }
     }
-    
+
+    private static async void ConfigureExternalTest(IRedisConnectionProvider provider)
+    {
+        if (provider.Connection.GetIndexInfo(typeof(ExternalTest)) == null)
+        {
+            provider.Connection.DropIndex(typeof(ExternalTest));
+            provider.Connection.CreateIndex(typeof(ExternalTest));
+            await provider.RedisCollection<ExternalTest>().InsertAsync(ExternalTestConfiguration.InitialData());
+        }
+    }
+
     private static async void ConfigureFeedback(IRedisConnectionProvider provider)
     {
         if (provider.Connection.GetIndexInfo(typeof(Feedback)) == null)
@@ -93,5 +103,6 @@ public static class ServiceExtensions
 
         ConfigureQTITest(provider);
         ConfigureFeedback(provider);
+        ConfigureExternalTest(provider);
     }
 }

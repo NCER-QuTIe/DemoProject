@@ -11,8 +11,8 @@ using Service;
 using StackExchange.Redis;
 using DataTransferObjects.Creation;
 using DataTransferObjects.Transfer;
-using Entities.Exceptions;
 using Entities.Models.Configurations;
+using Entities.Exceptions.QTITest;
 
 namespace DemoProjectTests;
 

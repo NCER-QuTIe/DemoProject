@@ -5,7 +5,7 @@ using Contracts.Repositories;
 using Contracts.Services;
 using DataTransferObjects.Creation;
 using DataTransferObjects.Transfer;
-using Entities.Exceptions;
+using Entities.Exceptions.Feedback;
 using Entities.Models;
 
 namespace Service;

@@ -6,6 +6,7 @@ using DataTransferObjects.Creation;
 using DataTransferObjects.Transfer;
 using Entities.Enums;
 using Entities.Exceptions;
+using Entities.Exceptions.QTITest;
 using Entities.Models;
 using Entities.Models.Configurations;
 using LoggerService;

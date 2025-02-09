@@ -1,3 +1,3 @@
-﻿namespace Entities.Exceptions;
+﻿namespace Entities.Exceptions.QTITest;
 
 public class QTITestByIdNotFoundException(Guid id) : NotFoundException($"QTITest with id {id} doesn't exist in the database");
