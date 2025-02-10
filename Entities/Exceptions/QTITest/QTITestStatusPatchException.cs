@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Exceptions;
+namespace Entities.Exceptions.QTITest;
 
 public class QTITestStatusPatchException(Guid id, TestStatusEnum status, Exception e) : Exception($"Failed to update status of QTITest with id {id} to {status}; {e.Message}")
 {

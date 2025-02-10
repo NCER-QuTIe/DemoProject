@@ -9,6 +9,7 @@ namespace Contracts.Repositories;
 public interface IRepositoryManager
 {
     IQTITestRepository QTITest{ get; }
+    IExternalTestRepository ExternalTest { get;  }
     IFeedbackRepository Feedback { get; }
     Task SaveAsync();
 }

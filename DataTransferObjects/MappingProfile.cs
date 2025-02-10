@@ -14,5 +14,9 @@ public class MappingProfile : Profile
 
         CreateMap<FeedbackCreationDTO, Feedback>().ForMember("Uploaded", opt => opt.MapFrom(x => DateTime.Now));
         CreateMap<Feedback, FeedbackDTO>();
+
+        CreateMap<ExternalTestCreationDTO, ExternalTest>().ForMember("Uploaded", opt => opt.MapFrom(x => DateTime.Now));
+        CreateMap<ExternalTest, ExternalTestCreationDTO>();
+        CreateMap<ExternalTest, ExternalTestDTO>();
     }
 }

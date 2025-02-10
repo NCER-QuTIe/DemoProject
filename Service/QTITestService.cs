@@ -4,8 +4,8 @@ using Contracts.Repositories;
 using Contracts.Services;
 using DataTransferObjects.Transfer;
 using Entities.Enums;
-using Entities.Exceptions;
 using Entities.Models;
+using Entities.Exceptions.QTITest;
 
 namespace Service;
 
@@ -42,9 +42,9 @@ public class QTITestService(IRepositoryManager repositoryManager, ILoggerManager
         var tests = _mapper.Map<IEnumerable<QTITest>, IEnumerable<QTITestDTO>>(await _repo.GetQTITestsByConditionAsync(t => t.Status == TestStatusEnum.Active));
 
         List<QTITestDTO> testsToReturn = new();
-        foreach(var test in tests)
+        foreach (var test in tests)
         {
-            testsToReturn.Add(test with { PackageBase64 = "EMPTY"});
+            testsToReturn.Add(test with { PackageBase64 = "EMPTY" });
         }
         testsToReturn.Sort((a, b) => a.Uploaded < b.Uploaded ? 1 : -1);
         return testsToReturn;
