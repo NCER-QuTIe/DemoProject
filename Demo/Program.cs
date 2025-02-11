@@ -3,9 +3,11 @@ using Contracts.Logger;
 using Demo.ActionFilters;
 using Demo.Authentication;
 using Demo.Extensions;
+using MailKit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Service;
 
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
@@ -20,6 +22,7 @@ builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureExternalAPIs();
 builder.Services.ConfigureMapper();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<MyMailService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
