@@ -60,9 +60,15 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 sheet.Cells[i, 2].Value = qtiTest.Name; // Name
             }
 
+            sheet.Cells[i, 3].Style.Numberformat.Format = "dd/MM/yyyy hh:mm:ss";
             sheet.Cells[i, 3].Value = startDate;
+            
+            sheet.Cells[i, 4].Style.Numberformat.Format = "dd/MM/yyyy hh:mm:ss";
             sheet.Cells[i, 4].Value = endDate;
+            
+            sheet.Cells[i, 5].Style.Numberformat.Format = @"hh\:mm\:ss";
             sheet.Cells[i, 5].Value = (endDate - startDate).ToString(@"hh\:mm\:ss");
+
             sheet.Cells[i, 6].Value = test.ItemResponses!.Count; // Number of pages
             sheet.Cells[i, 7].Value = test.ItemResponses!.Sum(x => x.Points!.Received); // Received points
             sheet.Cells[i, 8].Value = test.ItemResponses!.Sum(x => x.Points!.Maximal); // Max possible points
@@ -93,6 +99,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
 
                 sheet.Cells[i, 1].Value = testName;
                 sheet.Cells[i, 2].Value = pageNumber;
+                sheet.Cells[i, 3].Style.Numberformat.Format = @"hh\:mm\:ss";
                 sheet.Cells[i, 3].Value = (endDate - startDate).ToString(@"hh\:mm\:ss");
                 sheet.Cells[i, 4].Value = page.Points!.Received;
                 sheet.Cells[i, 5].Value = page.Points!.Maximal;
@@ -105,9 +112,9 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 }
 
                 pageNumber++;
+                i++;
             }
 
-            i++;
         }
     }
 }

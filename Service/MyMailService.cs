@@ -54,7 +54,7 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
         try
         {
             logger.LogInfo($"Started sending mail to {toAddress}");
-            //await client.SendAsync(message);
+            await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
         catch (Exception e)
