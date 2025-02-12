@@ -41,7 +41,7 @@ public class ExternalTestService(IRepositoryManager repositoryManager, ILoggerMa
     {
         var tests = _mapper.Map<IEnumerable<ExternalTest>, IEnumerable<ExternalTestDTO>>(await _repo.GetExternalTestsByConditionAsync(t => t.Status == TestStatusEnum.Active));
 
-        List<ExternalTestDTO> testsToReturn = new();
+        List<ExternalTestDTO> testsToReturn = new(tests);
         testsToReturn.Sort((a, b) => a.Uploaded < b.Uploaded ? 1 : -1);
         return testsToReturn;
     }
