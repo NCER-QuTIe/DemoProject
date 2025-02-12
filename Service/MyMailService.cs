@@ -67,7 +67,12 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
             message.Dispose();
             if (File.Exists(attachmentFilePath))
             {
-                //File.Delete(attachmentFilePath);
+                File.Delete(attachmentFilePath);
+            }
+            string folderPath = Path.Combine("ExcelFiles");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.Delete(folderPath);
             }
         }
 
