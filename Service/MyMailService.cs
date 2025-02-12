@@ -1,11 +1,7 @@
-﻿using Amazon.SimpleEmail;
-using Amazon.SimpleEmail.Model;
+﻿using Contracts;
 using Contracts.Logger;
-using DataTransferObjects.TestAnswer;
+using DataTransferObjects.TestResults;
 using MimeKit;
-using MailKit.Net.Smtp;
-using System.Net.Mail;
-using Contracts;
 
 namespace Service;
 
@@ -13,7 +9,7 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
 {
     private ContentToExcelService _contentToExcel = new ContentToExcelService(logger, builder);
 
-    public async Task<bool> SendTestResponseMail(EmailContent emailContent)
+    public async Task<bool> SendTestResponseMail(EmailContentDTO emailContent)
     {
         string excelFileAddress = "";
         try
@@ -24,7 +20,7 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
         catch (Exception e)
         {
             logger.LogError($"Error while generating excel for address: {emailContent.EmailToSend}, by: {emailContent.ResponseBundle!.StudentName}. {e.Message}");
-            if(File.Exists(excelFileAddress))
+            if (File.Exists(excelFileAddress))
             {
                 File.Delete(excelFileAddress);
             }
@@ -36,7 +32,7 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
         return await SendEmailWithAttachmentAsync(excelFileAddress, emailContent.EmailToSend!, emailContent);
     }
 
-    private async Task<bool> SendEmailWithAttachmentAsync(string attachmentFilePath, string toAddress, EmailContent content)
+    private async Task<bool> SendEmailWithAttachmentAsync(string attachmentFilePath, string toAddress, EmailContentDTO content)
     {
         string fromAddress = Environment.GetEnvironmentVariable("EMAIL_TO_SEND_FROM")!;
         string password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD")!;
@@ -61,14 +57,14 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
             //await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             logger.LogError($"Failed to send email to {toAddress}" + e.Message);
             return false;
         }
         finally
         {
-            message.Dispose(); 
+            message.Dispose();
             if (File.Exists(attachmentFilePath))
             {
                 //File.Delete(attachmentFilePath);

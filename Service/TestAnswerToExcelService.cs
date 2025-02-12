@@ -1,7 +1,6 @@
 ﻿using Contracts;
 using Contracts.Logger;
-using DataTransferObjects.TestAnswer;
-using System.Runtime.CompilerServices;
+using DataTransferObjects.TestResults;
 using System.Text.Json;
 
 namespace Service;
@@ -10,13 +9,13 @@ public class ContentToExcelService(ILoggerManager logger, IExcelBuilder excelBui
 {
     private IExcelBuilder _excelBuilder = excelBuilder;
 
-    public async Task<string> GenerateJsonFileAsync(TestResponseBundle testResponseBundle)
+    public async Task<string> GenerateJsonFileAsync(TestResponseBundleDTO testResponseBundle)
     {
         string json = JsonSerializer.Serialize(testResponseBundle);
         string folderPath = Path.Combine("JsonFiles");
         string filePath = Path.Combine(folderPath, $"data_{Guid.NewGuid()}.json");
-        
-        if(!Directory.Exists(folderPath))
+
+        if (!Directory.Exists(folderPath))
         {
             Directory.CreateDirectory(folderPath);
         }
@@ -27,7 +26,7 @@ public class ContentToExcelService(ILoggerManager logger, IExcelBuilder excelBui
             await File.WriteAllTextAsync(filePath, json);
             logger.LogInfo($"Generated json file on {filePath}");
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             logger.LogError($"Error while generating json file. {e.Message} \n Failed content: {JsonSerializer.Serialize(testResponseBundle)}");
             if (!File.Exists(filePath))
@@ -40,7 +39,7 @@ public class ContentToExcelService(ILoggerManager logger, IExcelBuilder excelBui
         return filePath;
     }
 
-    public async Task<string> GenerateExcelFileAsync(TestResponseBundle testResponseBundle)
+    public async Task<string> GenerateExcelFileAsync(TestResponseBundleDTO testResponseBundle)
     {
         string json = JsonSerializer.Serialize(testResponseBundle);
         string folderPath = Path.Combine("ExcelFiles");

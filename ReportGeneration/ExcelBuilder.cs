@@ -1,18 +1,15 @@
-﻿using Contracts.Repositories;
-using DataTransferObjects.TestAnswer;
+﻿using Contracts;
+using Contracts.Repositories;
+using DataTransferObjects.TestResults;
 using OfficeOpenXml;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
-using Contracts;
-using DataTransferObjects.Transfer;
 
 namespace ReportGeneration;
 
-public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
+public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
 {
     IQTITestRepository _repo = repositoryManager.QTITest;
 
-    public async Task GenerateExcelAsync(string outputPath, TestResponseBundle testResponseBundle)
+    public async Task GenerateExcelAsync(string outputPath, TestResponseBundleDTO testResponseBundle)
     {
 
         string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Template.xlsx");
@@ -27,7 +24,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
         var testSheet = package.Workbook.Worksheets["Sheet2"];
         var pageSheet = package.Workbook.Worksheets["Sheet3"];
 
-        if(summarySheet == null || testSheet == null || pageSheet == null)
+        if (summarySheet == null || testSheet == null || pageSheet == null)
         {
             throw new Exception("Template file is missing required sheets");
         }
@@ -39,7 +36,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
         package.SaveAs(outputFile);
     }
 
-    private void FillSummarySheet(ExcelWorksheet sheet, TestResponseBundle content)
+    private void FillSummarySheet(ExcelWorksheet sheet, TestResponseBundleDTO content)
     {
         sheet.Cells["A2"].Value = content.StudentName;
         sheet.Cells["B2"].Value = content.TestResponses!.Count;
@@ -47,10 +44,10 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
         sheet.Cells["D2"].Value = content.TestResponses!.Sum(x => x.ItemResponses!.Sum(x => x.Points!.Maximal));
     }
 
-    private async Task FillTestSheetAsync(ExcelWorksheet sheet, TestResponseBundle content)
+    private async Task FillTestSheetAsync(ExcelWorksheet sheet, TestResponseBundleDTO content)
     {
         int i = 2;
-        foreach(var test in content.TestResponses!)
+        foreach (var test in content.TestResponses!)
         {
             DateTime startDate = DateTimeOffset.FromUnixTimeMilliseconds(test.StartTimeEpoch).UtcDateTime.AddHours(4); // Georgian time zone
             DateTime endDate = DateTimeOffset.FromUnixTimeMilliseconds(test.EndTimeEpoch).UtcDateTime.AddHours(4); // Georgian time zone
@@ -58,10 +55,11 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
             sheet.Cells[i, 1].Value = i - 1; // Index
 
             var qtiTest = (await _repo.GetQTITestByIdAsync(test.TestId));
-            if (qtiTest != null) {
+            if (qtiTest != null)
+            {
                 sheet.Cells[i, 2].Value = qtiTest.Name; // Name
             }
-        
+
             sheet.Cells[i, 3].Value = startDate;
             sheet.Cells[i, 4].Value = endDate;
             sheet.Cells[i, 5].Value = (endDate - startDate).ToString(@"hh\:mm\:ss");
@@ -74,10 +72,10 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
         }
     }
 
-    private async Task FillPageSheetAsync(ExcelWorksheet sheet, TestResponseBundle content)
+    private async Task FillPageSheetAsync(ExcelWorksheet sheet, TestResponseBundleDTO content)
     {
         int i = 2;
-        foreach(var test in content.TestResponses!)
+        foreach (var test in content.TestResponses!)
         {
             string testName = "";
             var qtiTest = (await _repo.GetQTITestByIdAsync(test.TestId));
@@ -100,7 +98,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) :IExcelBuilder
                 sheet.Cells[i, 5].Value = page.Points!.Maximal;
 
                 int k = 6;
-                foreach(var item in page.ItemResponses!)
+                foreach (var item in page.ItemResponses!)
                 {
                     sheet.Cells[i, k].Value = item.Value;
                     k++;
