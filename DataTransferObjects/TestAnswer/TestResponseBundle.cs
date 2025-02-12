@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataTransferObjects.TestAnswer;
 
-public record TestResponseBundleDTO
+public record TestResponseBundle
 {
     public string? StudentName { get; set; }
-    public List<TestResponseDTO>? TestResponses { get; set; }
+    required public List<TestResponse> TestResponses { get; set; }
 }

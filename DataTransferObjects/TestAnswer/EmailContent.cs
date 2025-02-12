@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataTransferObjects.TestAnswer;
 
-public record EmailContentDTO
+public record EmailContent
 {
-    public TestResponseBundleDTO? responseBundle { get; set; }
-    public string? emailToSend { get; set; }
+    public TestResponseBundle? ResponseBundle { get; set; }
+    public string? EmailToSend { get; set; }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataTransferObjects.TestAnswer;
 
-public record TestResponseDTO
+public record TestResponse
 {
     // I use "TestId" (PascalCase) in place of testID.
-    public string? TestId { get; set; }
+    public Guid TestId { get; set; }
     public long StartTimeEpoch { get; set; }
     public long EndTimeEpoch { get; set; }
-    public List<ItemResponseDTO>? ItemResponses { get; set; }
+    public List<ItemResponse>? ItemResponses { get; set; }
 }

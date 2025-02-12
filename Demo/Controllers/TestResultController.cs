@@ -9,10 +9,10 @@ namespace Demo.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TestAnswerController(ILoggerManager logger, MyMailService mailService) : ControllerBase
+public class TestResultController(ILoggerManager logger, MyMailService mailService) : ControllerBase
 {
-    [HttpPost]
-    public async Task<IActionResult> SendEmail([FromBody] EmailContentDTO emailContent)
+    [HttpPost()]
+    public async Task<IActionResult> SendEmail([FromBody] EmailContent emailContent)
     {
         bool result = await mailService.SendTestResponseMail(emailContent);
         if (result)

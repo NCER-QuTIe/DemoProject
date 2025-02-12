@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataTransferObjects.TestAnswer;
 
-public record PointDTO
+public record Points
 {
     public int Received { get; set; }
     public int Maximal { get; set; }

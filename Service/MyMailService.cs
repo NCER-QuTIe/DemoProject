@@ -5,25 +5,25 @@ using DataTransferObjects.TestAnswer;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Net.Mail;
+using Contracts;
 
 namespace Service;
 
-public class MyMailService(ILoggerManager logger)
+public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
 {
+    private ContentToExcelService _contentToExcel = new ContentToExcelService(logger, builder);
 
-    private ContentToExcelService _contentToExcel = new ContentToExcelService(logger);
-
-    public async Task<bool> SendTestResponseMail(EmailContentDTO emailContent)
+    public async Task<bool> SendTestResponseMail(EmailContent emailContent)
     {
         string excelFileAddress = "";
         try
         {
-            logger.LogInfo($"Started generating excel for address: {emailContent.emailToSend}, by: {emailContent.responseBundle!.StudentName}");
-            excelFileAddress = await _contentToExcel.GenerateExcelFileAsync(emailContent.responseBundle!);
+            logger.LogInfo($"Started generating excel for address: {emailContent.EmailToSend}, by: {emailContent.ResponseBundle!.StudentName}");
+            excelFileAddress = await _contentToExcel.GenerateExcelFileAsync(emailContent.ResponseBundle!);
         }
         catch (Exception e)
         {
-            logger.LogError($"Error while generating excel for address: {emailContent.emailToSend}, by: {emailContent.responseBundle!.StudentName}. {e.Message}");
+            logger.LogError($"Error while generating excel for address: {emailContent.EmailToSend}, by: {emailContent.ResponseBundle!.StudentName}. {e.Message}");
             if(File.Exists(excelFileAddress))
             {
                 File.Delete(excelFileAddress);
@@ -31,38 +31,34 @@ public class MyMailService(ILoggerManager logger)
             return false;
         }
 
-        logger.LogInfo($"Generated excel for address: {emailContent.emailToSend}, by: {emailContent.responseBundle!.StudentName}, at: {excelFileAddress}");
+        logger.LogInfo($"Generated excel for address: {emailContent.EmailToSend}, by: {emailContent.ResponseBundle!.StudentName}, at: {excelFileAddress}");
 
-        return await SendEmailWithAttachmentAsync(excelFileAddress, emailContent.emailToSend!, emailContent);
+        return await SendEmailWithAttachmentAsync(excelFileAddress, emailContent.EmailToSend!, emailContent);
     }
 
-    private async Task<bool> SendEmailWithAttachmentAsync(string attachmentFilePath, string toAddress, EmailContentDTO content)
+    private async Task<bool> SendEmailWithAttachmentAsync(string attachmentFilePath, string toAddress, EmailContent content)
     {
-
         string fromAddress = Environment.GetEnvironmentVariable("EMAIL_TO_SEND_FROM")!;
         string password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD")!;
 
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress("NCER", fromAddress));
         message.To.Add(MailboxAddress.Parse(toAddress));
-        message.Subject = $"ტესტის შედეგები - {content.responseBundle!.StudentName}";
+        message.Subject = $"ტესტის შედეგები - {content.ResponseBundle!.StudentName}";
 
-        // Create the body of the email.
         var bodyBuilder = new BodyBuilder();
         bodyBuilder.Attachments.Add(attachmentFilePath);
         message.Body = bodyBuilder.ToMessageBody();
 
-        // Send the email using Gmail's SMTP server.
         using var client = new MailKit.Net.Smtp.SmtpClient();
         client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
 
-        // Authenticate using your Gmail address and password/app password.
         client.Authenticate(fromAddress, password);
 
         try
         {
             logger.LogInfo($"Started sending mail to {toAddress}");
-            await client.SendAsync(message);
+            //await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
         catch(Exception e)
