@@ -1,12 +1,18 @@
 using CompanyEmployees.Extensions;
+using Contracts;
 using Contracts.Logger;
 using Demo.ActionFilters;
 using Demo.Authentication;
 using Demo.Extensions;
+using MailKit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using OfficeOpenXml;
+using ReportGeneration;
+using Service;
 
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +26,8 @@ builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureExternalAPIs();
 builder.Services.ConfigureMapper();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<MyMailService>();
+builder.Services.AddScoped<IExcelBuilder, ExcelBuilder>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

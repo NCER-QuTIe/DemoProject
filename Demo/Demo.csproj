@@ -13,8 +13,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\DataTransferObjects\DataTransferObjects.csproj" />
+      <ProjectReference Include="..\ReportGeneration\ReportGeneration.csproj" />
       <ProjectReference Include="..\Repository\Repository.csproj" />
       <ProjectReference Include="..\Service\Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
