@@ -95,7 +95,7 @@ public class CreateQTIProcessorService : ICreateQTIProcessorService
 
     //}
 
-    private async Task<String> ConvertQTIPackageAsync(string Base64Package)
+    public async Task<String> ConvertQTIPackageAsync(string Base64Package)
     {
         var requestContent = new StringContent(JsonSerializer.Serialize(new { zipFile = Base64Package }), Encoding.UTF8, "application/json");
         HttpResponseMessage response;

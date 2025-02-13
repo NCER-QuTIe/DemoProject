@@ -73,16 +73,25 @@ public class QTITestAdminService(IRepositoryManager repositoryManager, ILoggerMa
 
         var properties = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(patchObject.ToString());
 
+        bool needToUpdatePackage = false;
         foreach (var property in properties!)
         {
             var propInfo = typeof(QTITest).GetProperty(property.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (propInfo != null && propInfo.CanWrite)
             {
+                if(propInfo.Name.Equals("packagebase64", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    needToUpdatePackage = true;
+                }
                 object? value = JsonSerializer.Deserialize(property.Value.GetRawText(), propInfo.PropertyType);
                 propInfo.SetValue(existingTest, value);
             }
         }
-
+        if (needToUpdatePackage)
+        {
+            existingTest.PackageBase64 = await _qtiPreProcessor.ConvertQTIPackageAsync(existingTest.PackageBase64!);
+        }
+        
         await _repo.UpdateQTITestAsync(existingTest);
     }
 }
