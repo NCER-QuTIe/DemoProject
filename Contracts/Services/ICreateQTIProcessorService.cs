@@ -12,4 +12,5 @@ public interface ICreateQTIProcessorService
 {
     public Task<QTITest> PreProcessAsync(QTITestCreationDTO test);
     public Task<QTITest> PostProcessAsync(QTITest test);
+    public Task<String> ConvertQTIPackageAsync(string Base64Package);
 }
