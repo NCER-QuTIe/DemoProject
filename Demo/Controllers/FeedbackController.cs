@@ -1,5 +1,6 @@
 ﻿using Contracts.Services;
 using DataTransferObjects.Creation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Controllers;
@@ -10,6 +11,7 @@ public class FeedbackController(IServiceManager serviceManager) : ControllerBase
 {
     [HttpGet]
     [Route("feedbacks")]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     public async Task<IActionResult> GetAllFeedbacksAsync()
     {
         var feedbacks = await serviceManager.Feedback.GetFeedbacksAsync();
@@ -17,6 +19,7 @@ public class FeedbackController(IServiceManager serviceManager) : ControllerBase
     }
 
     [HttpGet("feedback/{id:guid}", Name = "GetFeedbackById")]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     public async Task<IActionResult> GetFeedbackByIdAsync(Guid id)
     {
         var feedback = await serviceManager.Feedback.GetFeedbackByIdAsync(id);
@@ -31,6 +34,7 @@ public class FeedbackController(IServiceManager serviceManager) : ControllerBase
     }
 
     [HttpDelete("feedback/{id:guid}")]
+    [Authorize(AuthenticationSchemes = "BasicAuthentication")]
     public async Task<IActionResult> DeleteFeedbackAsync(Guid id)
     {
         await serviceManager.Feedback.DeleteFeedbackByIdAsync(id);
