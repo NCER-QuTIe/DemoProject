@@ -61,7 +61,7 @@ public class ContentToExcelService(ILoggerManager logger, IExcelBuilder excelBui
             logger.LogError($"Error while generating excel file. {e.Message} \nFailed content: {JsonSerializer.Serialize(testResponseBundle)}");
             if (!File.Exists(filePath))
             {
-                //File.Delete(filePath);
+                File.Delete(filePath);
             }
             throw;
         }
