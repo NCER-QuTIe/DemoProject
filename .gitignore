@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Internal logs
 C:\Users\erekl\source\repos\DemoProject\Demo\internal_logs\internallog.txt
+/Demo/internal_logs
