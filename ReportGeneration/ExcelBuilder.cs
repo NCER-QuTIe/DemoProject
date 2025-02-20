@@ -105,7 +105,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 sheet.Cells[i, 5].Value = page.Points!.Maximal;
 
                 int k = 6;
-                foreach (var item in page.ItemResponses!)
+                foreach (var item in page.InteractionResponses!)
                 {
                     sheet.Cells[i, k].Value = item.Value;
                     k++;
