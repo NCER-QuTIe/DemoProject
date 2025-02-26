@@ -8,8 +8,8 @@ namespace DataTransferObjects.TestResults;
 
 public record TestResponseDTO
 {
-    public Guid TestId { get; set; }
+    required public Guid TestId { get; set; }
     public long StartTimeEpoch { get; set; }
     public long EndTimeEpoch { get; set; }
-    public List<ItemResponseDTO>? ItemResponses { get; set; }
+    required public List<ItemResponseDTO>? ItemResponses { get; set; }
 }

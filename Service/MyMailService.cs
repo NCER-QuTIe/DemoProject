@@ -47,12 +47,11 @@ public class MyMailService(ILoggerManager logger, IExcelBuilder builder)
         message.Body = bodyBuilder.ToMessageBody();
 
         using var client = new MailKit.Net.Smtp.SmtpClient();
-        client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-
-        client.Authenticate(fromAddress, password);
 
         try
         {
+            client.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+            client.Authenticate(fromAddress, password);
             logger.LogInfo($"Started sending mail to {toAddress}");
             await client.SendAsync(message);
             await client.DisconnectAsync(true);

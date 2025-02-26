@@ -8,6 +8,6 @@ namespace DataTransferObjects.TestResults;
 
 public record TestResponseBundleDTO
 {
-    public string? StudentName { get; set; }
+    required public string? StudentName { get; set; }
     required public List<TestResponseDTO> TestResponses { get; set; }
 }
