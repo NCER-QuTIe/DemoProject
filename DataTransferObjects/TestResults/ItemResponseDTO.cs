@@ -2,13 +2,13 @@
 
 public record ItemResponseDTO
 {
-    public int? ItemNumber { get; set; }
+    required public int ItemNumber { get; set; }
 
-    public string? ItemIdentifier { get; set; }
+    required public string? ItemIdentifier { get; set; }
 
-    public Dictionary<string, string>? InteractionResponses { get; set; }
+    required public Dictionary<string, List<string> >? InteractionResponses { get; set; }
 
-    public int DurationSeconds { get; set; }
+    required public int DurationSeconds { get; set; }
 
-    public PointsDTO? Points { get; set; }
+    required public PointsDTO? Points { get; set; }
 }

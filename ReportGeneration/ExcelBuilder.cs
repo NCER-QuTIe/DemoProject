@@ -87,7 +87,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
             var qtiTest = (await _repo.GetQTITestByIdAsync(test.TestId));
             if (qtiTest != null)
             {
-                testName = qtiTest.Name; // Name
+                testName = qtiTest.Name!; // Name
             }
 
 
@@ -107,7 +107,8 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 int k = 6;
                 foreach (var item in page.InteractionResponses!)
                 {
-                    sheet.Cells[i, k].Value = item.Value;
+                    string response = string.Join(", ", item.Value);
+                    sheet.Cells[i, k].Value = response;
                     k++;
                 }
 

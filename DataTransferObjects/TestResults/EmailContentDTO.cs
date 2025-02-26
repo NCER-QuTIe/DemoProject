@@ -8,6 +8,6 @@ namespace DataTransferObjects.TestResults;
 
 public record EmailContentDTO
 {
-    public TestResponseBundleDTO? ResponseBundle { get; set; }
-    public string? EmailToSend { get; set; }
+    required public TestResponseBundleDTO ResponseBundle { get; set; }
+    required public string EmailToSend { get; set; }
 }
