@@ -19,7 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Template.xlsx">
+    <None Update="Template1.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Template2.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
