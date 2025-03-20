@@ -27,7 +27,7 @@ builder.Services.ConfigureExternalAPIs();
 builder.Services.ConfigureMapper();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<MyMailService>();
-builder.Services.AddScoped<IExcelBuilder, ExcelBuilderV1>();
+builder.Services.AddScoped<IExcelBuilder, ExcelBuilderV2>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

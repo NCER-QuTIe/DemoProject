@@ -12,12 +12,9 @@ namespace ReportGeneration;
 
 public class ExcelBuilderV1(IRepositoryManager repositoryManager, ILoggerManager logger) : ExcelBuilderBase(repositoryManager, logger)
 {
-    private IQTITestRepository _repo = repositoryManager.QTITest;
-    private ILoggerManager _logger = logger;
-     
     public override async Task GenerateExcelAsync(string outputPath, TestResponseBundleDTO testResponseBundle)
     {
-        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Template.xlsx");
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Template1.xlsx");
         FileInfo templateFile = new FileInfo(templatePath);
         FileInfo outputFile = new FileInfo(outputPath);
         Directory.CreateDirectory(outputFile.DirectoryName!);

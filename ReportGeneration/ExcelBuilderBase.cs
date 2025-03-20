@@ -1,12 +1,7 @@
 ﻿using Contracts;
 using DataTransferObjects.TestResults;
 using Entities.Models;
-using System;
-using System.Collections.Generic;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml;
 using Contracts.Logger;
@@ -16,8 +11,8 @@ namespace ReportGeneration;
 
 public abstract class ExcelBuilderBase(IRepositoryManager repositoryManager, ILoggerManager logger) : IExcelBuilder
 {
-    private IQTITestRepository _repo = repositoryManager.QTITest;
-    private ILoggerManager _logger = logger;
+    protected IQTITestRepository _repo = repositoryManager.QTITest;
+    protected ILoggerManager _logger = logger;
 
     public abstract Task GenerateExcelAsync(string outputPath, TestResponseBundleDTO testResponseBundle);
 
@@ -32,7 +27,6 @@ public abstract class ExcelBuilderBase(IRepositoryManager repositoryManager, ILo
         try
         {
             XElement element = doc.Descendants().FirstOrDefault(e => (string)e.Attribute("identifier")! == elementId)!;
-
             return element?.Value ?? elementId;
         }
         catch (Exception ex)
@@ -41,6 +35,30 @@ public abstract class ExcelBuilderBase(IRepositoryManager repositoryManager, ILo
             throw;
         }
     }
+
+    protected IEnumerable<string> GetCorrectResponse(XDocument doc, string responseIdentifier)
+    {
+        try
+        {
+            var a = doc.Descendants()
+                    .FirstOrDefault(e => (string)e.Attribute("identifier")! == responseIdentifier && e.Name.LocalName == "qti-response-declaration");
+
+            if(a == null) return Enumerable.Empty<string>();
+
+            var b = a.Descendants().Where(e => e.Name.LocalName == "qti-value")
+                    .Select(e => e.Value);
+
+            var c = b.Select(choice => GetElementContent(doc, choice));
+
+            return c;
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            throw;
+        }
+    }
+
 
     protected static XDocument ConvertToXDocument(XmlDocument xmlDoc)
     {
