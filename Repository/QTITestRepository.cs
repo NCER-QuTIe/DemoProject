@@ -1,6 +1,7 @@
 ﻿using Contracts.Repositories;
 using Entities.Models;
 using Redis.OM.Contracts;
+using Redis.OM.Searching;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Repository;
 
 public class QTITestRepository(IRedisConnectionProvider provider) : RepositoryBase<QTITest>(provider), IQTITestRepository
 {
+    private IRedisCollection<QTITest> NewCollection => provider.RedisCollection<QTITest>();
+
     public async Task<QTITest> CreateQTITestAsync(QTITest qtiTest)
     {
         await CreateAsync(qtiTest);
@@ -25,7 +28,7 @@ public class QTITestRepository(IRedisConnectionProvider provider) : RepositoryBa
 
     public  async Task<List<QTITest>> GetAllQTITestsAsync()
     {
-        return [.. await FindAllAsync()];
+        return await GetAllQTITestsWithoutPackageAsync();
     }
 
     public async Task<QTITest?> GetQTITestByIdAsync(Guid id)
@@ -42,5 +45,20 @@ public class QTITestRepository(IRedisConnectionProvider provider) : RepositoryBa
     {
         await UpdateAsync(qtiTest);
         return qtiTest;
+    }
+
+    private async Task<List<QTITest>> GetAllQTITestsWithoutPackageAsync()
+    {
+        var collection = NewCollection;
+
+        return [.. collection.Select(t => new QTITest
+        {
+            Id = t.Id,
+            Name = t.Name,
+            Description = t.Description,
+            Status = t.Status,
+            Uploaded = t.Uploaded,
+            PackageBase64 = "EMPTY"
+        })];
     }
 }

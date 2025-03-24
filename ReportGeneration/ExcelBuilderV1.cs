@@ -1,18 +1,20 @@
 ﻿using Contracts;
+using Contracts.Logger;
 using Contracts.Repositories;
 using DataTransferObjects.TestResults;
+using Entities.Models;
 using OfficeOpenXml;
+using System.IO.Compression;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace ReportGeneration;
 
-public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
+public class ExcelBuilderV1(IRepositoryManager repositoryManager, ILoggerManager logger) : ExcelBuilderBase(repositoryManager, logger)
 {
-    IQTITestRepository _repo = repositoryManager.QTITest;
-
-    public async Task GenerateExcelAsync(string outputPath, TestResponseBundleDTO testResponseBundle)
+    public override async Task GenerateExcelAsync(string outputPath, TestResponseBundleDTO testResponseBundle)
     {
-
-        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Template.xlsx");
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Template1.xlsx");
         FileInfo templateFile = new FileInfo(templatePath);
         FileInfo outputFile = new FileInfo(outputPath);
         Directory.CreateDirectory(outputFile.DirectoryName!);
@@ -62,10 +64,10 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
 
             sheet.Cells[i, 3].Style.Numberformat.Format = "dd/MM/yyyy hh:mm:ss";
             sheet.Cells[i, 3].Value = startDate;
-            
+
             sheet.Cells[i, 4].Style.Numberformat.Format = "dd/MM/yyyy hh:mm:ss";
             sheet.Cells[i, 4].Value = endDate;
-            
+
             sheet.Cells[i, 5].Style.Numberformat.Format = @"hh\:mm\:ss";
             sheet.Cells[i, 5].Value = (endDate - startDate).ToString(@"hh\:mm\:ss");
 
@@ -90,6 +92,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 testName = qtiTest.Name!; // Name
             }
 
+            Dictionary<string, XDocument> testItemContent = GetTestItemXDocuments(qtiTest!);
 
             int pageNumber = 1;
             foreach (var page in test.ItemResponses!)
@@ -105,9 +108,14 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 sheet.Cells[i, 5].Value = page.Points!.Maximal;
 
                 int k = 6;
+                
+                XDocument currentDocument = testItemContent[page.ItemIdentifier!];
+
                 foreach (var item in page.InteractionResponses!)
                 {
-                    string response = string.Join(", ", item.Value);
+                    IEnumerable<string> results = item.Value.Select(response => GetElementContent(currentDocument, response));
+
+                    string response = string.Join(", ", results);
                     sheet.Cells[i, k].Value = response;
                     k++;
                 }
@@ -115,7 +123,7 @@ public class ExcelBuilder(IRepositoryManager repositoryManager) : IExcelBuilder
                 pageNumber++;
                 i++;
             }
-
         }
     }
+
 }
