@@ -51,14 +51,6 @@ public class QTITestRepository(IRedisConnectionProvider provider) : RepositoryBa
     {
         var collection = NewCollection;
 
-        return [.. collection.Select(t => new QTITest
-        {
-            Id = t.Id,
-            Name = t.Name,
-            Description = t.Description,
-            Status = t.Status,
-            Uploaded = t.Uploaded,
-            PackageBase64 = "EMPTY"
-        })];
+        return [.. collection.AsQueryable().ToList()];
     }
 }
